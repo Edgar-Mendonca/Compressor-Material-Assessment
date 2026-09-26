@@ -1,0 +1,80 @@
+/* Mobile layout overrides; desktop styling lives in styles.css. */
+.stage-brief,.mobile-chart-hint{display:none}
+body.chart-open{overflow:hidden}
+.plot-card.expanded{position:fixed;inset:10px;z-index:30;margin:0;padding:18px;background:#fff;display:flex;flex-direction:column;box-shadow:0 0 0 100vmax #08233dbb,0 20px 65px #07213d77}
+.plot-card.expanded .chart-frame{flex:1;min-height:0;display:flex;align-items:center}
+.plot-card.expanded .chart-frame svg{width:100%;max-height:100%;min-width:0}
+
+@media(max-width:700px){
+  body{overflow-x:hidden}
+  .workspace,.header-inner{width:100%;max-width:100%}
+  .site-header nav{display:flex;justify-content:space-between;gap:4px;overflow:visible}
+  .site-header nav button{flex:1;min-width:0;padding:11px 5px;line-height:1.2;text-align:center;white-space:normal}
+  .heading>.btn{margin-top:15px;width:100%}
+  .toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+  .toolbar>.btn,.toolbar>.load-control{width:100%;min-width:0;white-space:normal;text-align:center}
+  .toolbar>.load-control{grid-column:1/-1;justify-content:space-between}
+  .toolbar>.load-control select{min-width:0;flex:1;max-width:70%}
+  .toolbar>.btn.quiet{grid-column:1/-1}
+  .btn,.stage-chip,.icon-button,.inline-button{min-height:42px}
+  .field input,.field select,.field textarea,.stage-table input,.stage-table select{font-size:16px;min-height:44px}
+  .panel,.summary,.stage-detail{max-width:100%;min-width:0}
+
+  /* Each selected stage becomes an editable card; others remain compact selectors. */
+  .stage-scroll{overflow:visible}
+  .stage-table,.stage-table tbody{display:block;width:100%;min-width:0}
+  .stage-table thead{display:none}
+  .stage-table tbody tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 11px;position:relative;width:100%;margin:0 0 10px;padding:12px;border:1px solid #dce8f3;border-radius:10px;background:#fff}
+  .stage-table tbody tr.active{background:#eef7ff;border-color:#91c8fa}
+  .stage-table tbody tr:hover{background:#f4faff}
+  .stage-table tbody tr>th{display:flex;align-items:center;gap:9px;grid-column:1/-1;padding:0;border:0;min-width:0}
+  .stage-table .row-stage{font-size:16px;min-height:39px;padding:4px 7px;text-align:left}
+  .stage-brief{display:inline;color:#6b8399;font-size:12px;font-weight:500;white-space:normal;overflow-wrap:anywhere}
+  .stage-table tbody tr:not(.active)>td{display:none}
+  .stage-table tbody tr.active>td{display:flex;flex-direction:column;gap:4px;min-width:0;padding:0;border:0}
+  .stage-table td::before{content:attr(data-label);display:block;color:#58748d;font-size:11px;font-weight:700;white-space:normal}
+  .stage-table td input,.stage-table td select{width:100%;min-width:0;padding:8px}
+  .stage-table tbody tr.active>td.stage-remove{position:absolute;right:10px;top:10px;display:block;width:auto}
+  .stage-table .stage-remove::before{display:none}
+
+  .plot-grid{grid-template-columns:minmax(0,1fr)}
+  .plot-card{overflow:hidden}
+  .plot-card .section-heading{display:block}
+  .download-actions{margin-top:10px;flex-wrap:wrap}
+  .download-actions .btn{min-height:40px;flex:1}
+  .chart-frame{width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;border:1px solid #e2edf6;border-radius:7px}
+  .chart-frame svg{min-width:680px;width:680px;max-width:none;height:auto}
+  .mobile-chart-hint{display:block;font-size:11px;color:#66819b;margin:8px 0 0}
+  .plot-card.expanded{inset:5px;padding:12px;overflow:hidden}
+  .plot-card.expanded .section-heading{flex:none}
+  .plot-card.expanded .chart-frame{align-items:start;overflow:auto}
+  .plot-card.expanded .chart-frame svg{width:760px;min-width:760px;max-height:none}
+  .plot-tooltip{display:none!important}
+
+  .material-top{flex-wrap:wrap}
+  .material-top h3{min-width:0;overflow-wrap:anywhere}
+  .material-card .status{white-space:normal}
+  .library-scroll{overflow:visible}
+  .library-table,.library-table tbody{display:block;width:100%}
+  .library-table thead{display:none}
+  .library-table tbody tr{display:grid;gap:4px;margin:0 0 10px;border:1px solid #dce8f3;border-radius:9px;padding:12px;background:#fff}
+  .library-table tbody th,.library-table tbody td{display:block;white-space:normal;padding:2px 0;border:0;min-width:0;overflow-wrap:anywhere}
+  .library-table tbody th{grid-row:1;font-size:14px;color:#173f61}
+  .library-table tbody td:first-child{grid-row:2;color:#66819b}
+  .library-table tbody td:nth-child(3):before{content:'Exposed surface: ';font-weight:700;color:#56728a}
+  .library-table .actions{gap:20px;margin-top:3px}
+  .results-table:not(.library-table){min-width:780px}
+  .results-table:not(.library-table) th,.results-table:not(.library-table) td{padding:9px 8px}
+  .form-actions{flex-wrap:wrap}
+  .form-actions .btn{flex:1}
+}
+
+@media(max-width:440px){
+  .form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .field.full{grid-column:1/-1}
+  .stage-detail dl{gap:10px}
+  .stage-detail dd{font-size:12px}
+  .stage-detail dt{font-size:10px}
+  .chart-frame svg{min-width:680px;width:680px}
+}
+@media(max-width:350px){.form-grid{grid-template-columns:1fr}.stage-table tbody tr{grid-template-columns:1fr}}
