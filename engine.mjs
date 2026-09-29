@@ -60,12 +60,12 @@ export const DEFAULT_CASE = {
     pressure: String(pressure), temperature: String(temperature), h2o: '0.922',
     co2: '5', h2s: '30', water: i === 0 ? 'yes' : 'no',
     ph: ['3.91', '3.89', '3.87', '3.85', '3.82', '3.75'][i],
-    phBasis: 'example', rate: '', rateBasis: 'unknown',
+    phBasis: 'example', rate: '', rateBasis: 'unknown', waterBasis: '',
   })),
   conditions: {
     mdmt: '', chloride: '', oxygen: '', mercury: '', droplet: '',
     serviceYears: '20', sopPressure: '', sopTemperature: '', sopH2o: '', sopH2S: '', sopCO2: '',
-    sopWater: 'unknown', sopPH: '', sopPHBasis: 'unknown', sopRate: '', sopRateBasis: 'unknown',
+    sopWater: 'unknown', sopDryBasis: '', sopPH: '', sopPHBasis: 'unknown', sopRate: '', sopRateBasis: 'unknown',
   },
   selected: Object.fromEntries(COMPONENTS.map(component=>[component,DEFAULT_MATERIALS.find(m=>m.component===component)?.id||''])),
 };
@@ -121,21 +121,31 @@ export function analyzeCase(data) {
     const pH2S=pressure==null||h2s==null?null:pressure*h2s/100;
     const pCO2=pressure==null||co2==null?null:pressure*co2/100;
     const pH2O=pressure==null||h2o==null?null:pressure*h2o/100;
+    const dew=pH2O==null?null:waterDewPoint(pH2O);
     stages.push({id:index+1,...s,pressure,temperature,h2o,co2,h2s,ph,rate,pH2S,pCO2,pH2O,
-      dew:pH2O==null?null:waterDewPoint(pH2O),
+      dew,dewMargin:dew==null||temperature==null?null:temperature-dew,
       domain:pH2S==null?null:illustrativeDomain(pH2S,ph),
       phBasis:s.phBasis || 'unknown',rateBasis:s.rateBasis || 'unknown'});
   });
   const c=data.conditions||{};
+  for (const [key,label,min,max] of [
+    ['mdmt','MDMT',-100,500],['chloride','chlorides',0,1000000],
+    ['oxygen','oxygen',0,1000000],['mercury','mercury',0,1000000],
+    ['droplet','droplet size',0,1000000],['serviceYears','assessment life',0,1000],
+    ['sopPH','SOP aqueous pH',0,14],['sopRate','SOP corrosion rate',0,100],
+  ]) optionalNumber(c[key],label,min,max,errors);
   let sop=null;
-  if (String(c.sopPressure??'').trim()!=='' || String(c.sopTemperature??'').trim()!=='' || String(c.sopH2o??'').trim()!=='') {
+  if (['sopPressure','sopTemperature','sopH2o','sopH2S','sopCO2'].some(key=>String(c[key]??'').trim()!=='')) {
     const pressure=requiredNumber(c.sopPressure,'SOP pressure',0.000001,1000,errors);
     const temperature=requiredNumber(c.sopTemperature,'SOP temperature',-100,500,errors);
     const h2o=requiredNumber(c.sopH2o,'SOP H₂O %',0,100,errors);
     const h2s=requiredNumber(c.sopH2S,'SOP H₂S %',0,100,errors);
     const co2=requiredNumber(c.sopCO2,'SOP CO₂ %',0,100,errors);
     if (![h2o,h2s,co2].includes(null) && h2o+h2s+co2>100.00001) errors.push('SOP H₂O + H₂S + CO₂ exceeds 100%');
-    if (![pressure,temperature,h2o,h2s,co2].includes(null)) sop={pressure,temperature,h2o,h2s,co2,pH2O:pressure*h2o/100,pH2S:pressure*h2s/100,pCO2:pressure*co2/100,dew:waterDewPoint(pressure*h2o/100)};
+    if (![pressure,temperature,h2o,h2s,co2].includes(null)) {
+      const dew=waterDewPoint(pressure*h2o/100);
+      sop={pressure,temperature,h2o,h2s,co2,pH2O:pressure*h2o/100,pH2S:pressure*h2s/100,pCO2:pressure*co2/100,dew,dewMargin:dew==null?null:temperature-dew};
+    }
   }
   return {errors,stages:errors.length?[]:stages,sop:errors.length?null:sop};
 }
@@ -173,12 +183,18 @@ export function assessMaterial(data, analysis, material) {
   if (uncertain.length) need(`Confirm liquid water at stages ${uncertain.map(s=>s.id).join(', ')}.`);
   if (c.sopWater==='unknown' || !['yes','no'].includes(c.sopWater)) need('Confirm liquid water during settled-out / standstill conditions.');
   if (!analysis.sop) need('Enter SOP pressure, temperature and H₂O % to review cooldown.');
-  if (analysis.sop && c.sopWater==='no' && analysis.sop.dew!=null && analysis.sop.temperature<analysis.sop.dew+10)
-    need('SOP is declared dry but lies within the 10 °C dew-point approach; substantiate the dry assumption.');
+  if (analysis.sop && c.sopWater==='no' && analysis.sop.dewMargin!=null && analysis.sop.dewMargin<10) {
+    if (!String(c.sopDryBasis||'').trim()) need('SOP is declared dry within the 10 °C dew-point approach; enter its dry-condition justification.');
+    else ok(`SOP dry-condition justification recorded: ${c.sopDryBasis}`);
+  }
+  for (const s of analysis.stages.filter(s=>s.water==='no'&&s.dewMargin!=null&&s.dewMargin<10)) {
+    if (!String(s.waterBasis||'').trim()) need(`Stage ${s.id} is declared dry within the 10 °C dew-point approach; enter its dry-condition justification.`);
+    else ok(`Stage ${s.id} dry-condition justification recorded: ${s.waterBasis}`);
+  }
   if (c.sopWater==='yes') {
     const ph=present(c.sopPH)?Number(c.sopPH):null;
     if (ph==null || !['measured','validated'].includes(c.sopPHBasis)) need('Wet SOP requires measured or validated aqueous pH.');
-    else wet.push({id:'SOP',ph,phBasis:c.sopPHBasis,pH2S:analysis.sop?.pH2S,pCO2:analysis.sop?.pCO2,
+    if (analysis.sop) wet.push({id:'SOP',ph,phBasis:c.sopPHBasis,pH2S:analysis.sop.pH2S,pCO2:analysis.sop.pCO2,
       rate:present(c.sopRate)?Number(c.sopRate):null,rateBasis:c.sopRateBasis});
   }
   if (c.sopWater==='no' && analysis.sop) dry.push({id:'SOP',pH2S:analysis.sop.pH2S});

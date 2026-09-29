@@ -15,7 +15,7 @@ This is a static browser app for checking **a selected material** against a reco
 
 ## GitHub Pages and phone use
 
-- Upload the **contents** of the unzipped `compressor-material-assessment-local` folder to the root of your GitHub repository, including `index.html`, `styles.css`, `mobile.css`, and the `.mjs` files. You may leave out `tests/` and `README.md` when publishing.
+- Upload the **contents** of the unzipped `compressor-material-assessment-local` folder to the root of your GitHub repository, including `index.html`, all three `.css` files, and the `.mjs` files. You may leave out `tests/` and `README.md` when publishing.
 - In the repository, open **Settings → Pages**, select **Deploy from a branch**, choose your branch and `/ (root)`, then save. Open the resulting Pages URL on your phone.
 - On a phone, tap a stage to reveal its input fields. Swipe inside a chart or tap **Expand** to explore it. The calculated-results table can also be scrolled sideways within its panel.
 - Browser storage is tied to the site address. A case saved under `localhost` will not automatically appear at the GitHub Pages address or on another device. Export its JSON locally, then import it at the Pages address if you want to move it.
@@ -24,10 +24,13 @@ This is a static browser app for checking **a selected material** against a reco
 
 - The **Assessment** tab starts with six editable example stages and example material names. These material records have blank service limits, so the initial result is **Evidence needed**.
 - Enter pressure (absolute bar), temperature, gas mole percentages, aqueous pH where wet, corrosion rate from your own assessment, water status, and sources. Provide the settled-out / standstill (SOP) case, minimum design metal temperature (MDMT), contaminants, service life, and a case design-basis reference.
+- For a stage or SOP declared dry within 10 °C of the estimated water dew point, record the dry-condition justification in the adjacent field. This is an evidence check, not an automated wet/dry prediction.
 - In **Material library**, add or edit each component material, actual wetted surface and product form. Enter limits supported by a document and mark the record reviewed only after checking it.
 - Document a dry-service H₂S limit if any stages or SOP are dry. Wet-service limits, aqueous pH and assessed corrosion rates apply where liquid water is confirmed.
 - Return to **Assessment** and choose the material for each component. Expand **View assessment checks** for breaches, missing evidence, and completed checks.
-- The water and SSC charts support hover, click, keyboard selection, and SVG/PNG downloads. The SSC domains D0–D3 describe the **plotted environment only**. They do not certify a grade.
+- The dashboard includes water condensation, illustrative SSC domains, water exposure, H₂S by stage, corrosion allowance, and a component decision map. Hover, tap or use keyboard controls to inspect points. All six charts export SVG/PNG. The SSC domains D0–D3 describe the **plotted environment only**. They do not certify a grade.
+- In **Calculation methods**, inspect a live worked stage and the equations, thresholds, decision order and limits of the assessment.
+- Use **Presentation report** to review a printable case summary with components and graphs, then **Print / Save PDF** in your browser.
 - Save named cases in the browser. **Export case JSON** includes the case and material library for backup or transfer. **Import case JSON** brings both into the current browser. **Export results CSV** provides a tabular summary.
 
 ## Decision meanings
@@ -39,6 +42,8 @@ This is a static browser app for checking **a selected material** against a reco
 | Within recorded limits · conditional | All required inputs for the assessed wet/dry exposure fit the entered and reviewed material limits. Engineering sign-off is still needed. |
 
 The calculation uses ideal gas partial pressures. Water saturation uses a limited Antoine estimate valid for water dew points 0–100 °C. The +10 °C line is a visualization of approach, not a proof that a metal surface is dry. Corrosion rate is **not predicted**: enter independently assessed rates and relevant material loss allowances. Product standards, SSC qualification, fabrication, coatings, phase behavior, mechanical strength, and API 617 / ISO 15156 compliance require separate documented engineering review. A material name alone never passes.
+
+The component decision map displays recorded verdicts, not a numeric risk score. The corrosion chart displays entered wet-stage rates against the chosen component record and uses `rate × assessment life` for each plotted loss; it does not add stage losses or calculate time at each condition.
 
 ## Local data
 

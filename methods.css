@@ -1,0 +1,27 @@
+.focus-row{display:flex;align-items:end;justify-content:space-between;gap:24px;background:#eaf4ff;border:1px solid #cde5fa;border-radius:12px;padding:16px 20px;margin:20px 0}
+.focus-row strong{color:#004c99;font-size:15px}.focus-row p{color:#617b92;font-size:12px;margin:5px 0 0;max-width:690px;line-height:1.5}.focus-row .field{width:min(300px,38%)}
+.method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.method-grid .panel{margin:0}.method-card{position:relative;padding-top:28px}.method-card h2{margin:2px 0 10px}.method-card p,.methods>.panel p{font-size:13px;color:#55738c;line-height:1.65}.method-number{font-size:11px;color:#0066cc;font-weight:800;letter-spacing:.1em;margin-bottom:8px}.formula{display:block;padding:13px 15px;margin:17px 0;border:1px solid #cde3f7;border-radius:8px;background:#eff7ff;color:#004c99;font:600 13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:normal;overflow-wrap:anywhere}.worked-values{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.worked-values>div{padding:12px;background:#f4f8fc;border-radius:8px;min-width:0}.worked-values span,.worked-values strong{display:block}.worked-values span{font-size:11px;color:#66819b;margin-bottom:4px}.worked-values strong{font-size:15px;color:#173f61}.decision-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.decision-flow>div{padding:16px;background:#f4f8fc;border-radius:9px}.decision-flow p{margin:9px 0 0}.methods>.panel{margin-top:20px}.methods>.panel:first-of-type{margin-top:0}.methods .section-heading{align-items:center}.methods .stage-tabs{max-width:60%}
+@media(max-width:1100px){.decision-flow{grid-template-columns:1fr}.methods .stage-tabs{max-width:100%}}
+@media(max-width:700px){.focus-row{display:block;padding:15px}.focus-row .field{width:100%;margin-top:12px}.method-grid{grid-template-columns:1fr;gap:14px}.worked-values{grid-template-columns:repeat(2,minmax(0,1fr))}.methods .section-heading{display:block}.methods .stage-tabs{justify-content:start;margin-top:12px}.methods .panel{padding:16px}}
+@media(max-width:350px){.worked-values{grid-template-columns:1fr}}
+.report-actions{display:flex;gap:8px;flex-wrap:wrap}.report-section h2{margin-bottom:14px}.report-material-table{table-layout:fixed;min-width:0}.report-material-table th,.report-material-table td{white-space:normal;overflow-wrap:anywhere;vertical-align:top;line-height:1.4}.report-material-table th:nth-child(1){width:15%}.report-material-table th:nth-child(2){width:18%}.report-material-table th:nth-child(3){width:16%}.report-material-table th:nth-child(4){width:33%}.report-material-table th:nth-child(5){width:18%}.report-plots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.report-plots .panel{margin:0}.report-screen .report-section p{font-size:12px;line-height:1.55;color:#55738c}.report-screen .summary{margin-bottom:20px}
+@media(max-width:900px){.report-plots{grid-template-columns:1fr}.report-material-table{min-width:800px}}
+@media(max-width:700px){.report-actions{margin-top:15px}.report-actions .btn{flex:1}.report-screen .report-plots{display:grid}.report-screen .report-plots .plot-card{margin-bottom:0}}
+@media print{
+  @page{size:A4 portrait;margin:12mm}
+  html,body{background:#fff!important;color:#173754!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .site-header,footer,.toast,.plot-tooltip,.report-actions,.download-actions,.mobile-chart-hint{display:none!important}
+  .report-screen{max-width:none;width:100%;padding:0;margin:0}
+  .report-screen .heading{margin-bottom:13px}.report-screen .heading h1{font-size:25px}
+  .report-screen .panel,.report-screen .summary{box-shadow:none;margin:0 0 12px;padding:12px;border:1px solid #cddde9;break-inside:avoid}
+  .report-screen .summary h2{font-size:18px}
+  .report-screen .scroll,.report-screen .chart-frame{overflow:visible;border:0}
+  .report-screen table{width:100%;table-layout:fixed}.report-screen table th,.report-screen table td{font-size:8px;padding:4px;white-space:normal;overflow-wrap:anywhere}
+  .report-screen .report-stage-table,.report-screen .report-material-table{min-width:0}
+  .report-screen .report-plots{display:block}
+  .report-screen .plot-card{break-inside:avoid;page-break-inside:avoid;margin-bottom:12px}
+  .report-screen .chart-frame svg,.report-screen .plot-card.expanded .chart-frame svg{display:block;width:100%;min-width:0;max-width:100%;height:auto;max-height:none}
+  .report-screen .section-heading{margin-bottom:5px}
+  .report-screen .section-heading h2{font-size:14px}
+  .report-screen .section-heading p{font-size:10px}
+}
